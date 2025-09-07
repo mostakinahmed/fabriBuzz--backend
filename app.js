@@ -9,9 +9,11 @@ const multer = require("multer");
 //dotenv.config();
 //models
 const Product = require("./models/productModel");
+const category = require("./models/categoryModel");
 
 //routes
 const productRoutes = require("./routes/productRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 
 //database connection
 const db = require("./config/db-connection");
@@ -22,8 +24,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.json());
 
-//all routers
+//all api routes
 app.use("/api/product", productRoutes);
+app.use("/api/category", categoryRoutes);
 
 //home route
 app.get("/", (req, res) => {
