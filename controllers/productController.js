@@ -2,9 +2,25 @@ const product = require("../models/productModel");
 const multer = require("multer");
 
 // GET all products
+// const getAllProducts = async (req, res) => {
+//   try {
+//     const products = await product.find(); // MongoDB query
+//     res.json(products);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 const getAllProducts = async (req, res) => {
   try {
-    const products = await product.find(); // MongoDB query
+    const filter = {};
+
+    // Check if category param exists
+    if (req.query.category) {
+      filter.category = req.query.category; // e.g. "C005"
+    }
+
+    const products = await product.find(filter);
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
