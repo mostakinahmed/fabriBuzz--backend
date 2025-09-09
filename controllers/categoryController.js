@@ -2,9 +2,25 @@ const category = require("../models/categoryModel");
 const multer = require("multer");
 
 // GET all categories
+// const getAllCategories = async (req, res) => {
+//   try {
+//     const categories = await category.find(); // MongoDB query
+//     res.json(categories);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 const getAllCategories = async (req, res) => {
   try {
-    const categories = await category.find(); // MongoDB query
+    const filter = {};
+
+    // If query param exists, filter by catID
+    if (req.query.catID) {
+      filter.catID = req.query.catID; // e.g., "C001"
+    }
+
+    const categories = await category.find(filter);
     res.json(categories);
   } catch (error) {
     res.status(500).json({ message: error.message });
