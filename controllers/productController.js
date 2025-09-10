@@ -26,10 +26,7 @@ const getAllProducts = async (req, res) => {
 // CREATE new product
 const createProduct = async (req, res) => {
   try {
-    console.log(req.body);
-
     const newProduct = new product(req.body); // Data from request
-    console.log(newProduct);
 
     //id genararte
     const lastProduct = await product.findOne().sort({ createdAt: -1 });
@@ -38,13 +35,10 @@ const createProduct = async (req, res) => {
       newNumber = parseInt(lastProduct.pID.slice(1)) + 1;
     }
     const newID = "P" + String(newNumber).padStart(6, "0");
-
-    newProduct.price = 10000;
     newProduct.pID = newID;
     console.log(newProduct);
 
     const savedProduct = await newProduct.save();
-    console.log("save successful.");
 
     res.status(201).json(savedProduct);
   } catch (error) {
