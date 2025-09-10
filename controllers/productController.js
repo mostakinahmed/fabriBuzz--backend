@@ -1,16 +1,7 @@
 const product = require("../models/productModel");
 const multer = require("multer");
 
-// GET all products
-// const getAllProducts = async (req, res) => {
-//   try {
-//     const products = await product.find(); // MongoDB query
-//     res.json(products);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
+//get
 const getAllProducts = async (req, res) => {
   try {
     const filter = {};
@@ -35,8 +26,26 @@ const getAllProducts = async (req, res) => {
 // CREATE new product
 const createProduct = async (req, res) => {
   try {
+    console.log(req.body);
+
     const newProduct = new product(req.body); // Data from request
+    console.log(newProduct);
+
+    //id genararte
+    const lastProduct = await product.findOne().sort({ createdAt: -1 });
+    let newNumber = 1;
+    if (lastProduct && lastProduct.pID) {
+      newNumber = parseInt(lastProduct.pID.slice(1)) + 1;
+    }
+    const newID = "P" + String(newNumber).padStart(6, "0");
+
+    newProduct.price = 10000;
+    newProduct.pID = newID;
+    console.log(newProduct);
+
     const savedProduct = await newProduct.save();
+    console.log("save successful.");
+
     res.status(201).json(savedProduct);
   } catch (error) {
     res.status(400).json({ message: error.message });
