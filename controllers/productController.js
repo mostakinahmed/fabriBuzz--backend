@@ -50,11 +50,11 @@ const createProduct = async (req, res) => {
 // PATCH /api/product/:id/stock
 const stockUpdate = async (req, res) => {
   try {
-    const { pID } = req.params;
+    const { id } = req.params;
     const { stock } = req.body;
 
     const updated = await product.findOneAndUpdate(
-      pID,
+      { pID: id },
       { stock: stock },
       { new: true }
     );
