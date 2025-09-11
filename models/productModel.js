@@ -18,6 +18,12 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0.0,
     },
+    //stock field
+    stock: {
+      type: Number,
+      default: 0, // start with zero
+      min: [0, "Stock cannot be negative"],
+    },
     images: String,
     category: String,
   },

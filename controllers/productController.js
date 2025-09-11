@@ -46,4 +46,25 @@ const createProduct = async (req, res) => {
   }
 };
 
-module.exports = { getAllProducts, createProduct };
+//update stock
+// PATCH /api/product/:id/stock
+const stockUpdate = async (req, res) => {
+  try {
+    const { pID } = req.params;
+    const { stock } = req.body;
+
+    const updated = await product.findOneAndUpdate(
+      pID,
+      { stock: stock },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ message: "Product not found" });
+
+    res.status(200).json(updated);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+module.exports = { getAllProducts, createProduct, stockUpdate };
