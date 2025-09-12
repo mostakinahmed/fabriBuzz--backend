@@ -14,7 +14,6 @@ const category = require("./models/categoryModel");
 //routes
 const productRoutes = require("./routes/productRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
-const deleteRoutes = require("./routes/deleteRoutes");
 
 //database connection
 const db = require("./config/db-connection");
@@ -28,7 +27,6 @@ app.use(express.json());
 //all api routes
 app.use("/api/product", productRoutes);
 app.use("/api/category", categoryRoutes);
-app.use("/api/delete", deleteRoutes);
 
 //home route
 app.get("/", (req, res) => {
