@@ -25,14 +25,14 @@ const createOrder = async (req, res) => {
     const newOrder = new order(req.body); // Data from request
 
     //id genararte
-    const lastOrder = await order.findOne().sort({ createdAt: -1 });
-    let newNumber = 1;
-    if (lastOrder && lastOrder.OID) {
-      newNumber = parseInt(lastOrder.OID.slice(3)) + 1;
-    }
-    const newID = "OID" + String(newNumber).padStart(8, "0");
-    newOrder.OID = newID;
-    console.log(newOrder);
+    // const lastOrder = await order.findOne().sort({ createdAt: -1 });
+    // let newNumber = 1;
+    // if (lastOrder && lastOrder.OID) {
+    //   newNumber = parseInt(lastOrder.OID.slice(3)) + 1;
+    // }
+    // const newID = "OID" + String(newNumber).padStart(8, "0");
+    // newOrder.OID = newID;
+    // console.log(newOrder);
 
     const savedProduct = await newOrder.save();
 
