@@ -4,6 +4,7 @@ const {
   getAllProducts,
   stockUpdate,
   deleteProduct,
+  productUpdate,
 } = require("../controllers/productController");
 
 const multer = require("multer");
@@ -14,8 +15,6 @@ router.get("/", getAllProducts);
 router.post("/", upload.none(), createProduct);
 router.patch("/:id/stock", stockUpdate); 
 router.delete("/delete/:id", deleteProduct);
-// router.get("/:id", getProductById);
-// router.put("/:id", updateProduct);
-// router.delete("/:id", deleteProduct);
+router.put("/update/:id", productUpdate);
 
 module.exports = router;

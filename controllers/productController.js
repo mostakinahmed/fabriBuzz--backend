@@ -19,9 +19,6 @@ const getAllProducts = async (req, res) => {
 };
 
 // Insert into MongoDB
-// Product.insertMany(products)
-//   .then(() => console.log("Products inserted successfully"))
-//   .catch((err) => console.error(err));
 
 // CREATE new product
 const createProduct = async (req, res) => {
@@ -82,4 +79,29 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-module.exports = { getAllProducts, createProduct, stockUpdate, deleteProduct };
+//update product
+// api/product/update/:id
+const productUpdate = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+
+    const updated = await product.findOneAndUpdate({ _id: id }, data, {
+      new: true,
+    });
+
+    if (!updated) return res.status(404).json({ message: "Product not found" });
+
+    res.status(200).json(updated);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+module.exports = {
+  getAllProducts,
+  createProduct,
+  stockUpdate,
+  deleteProduct,
+  productUpdate,
+};
