@@ -22,11 +22,11 @@ const orderSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    // orderDate: {
-    //   type: String,
-    //   trim: true,
-    //   maxLength: [100, "Product name cannot exceed 100 characters"],
-    // },
+    //Order Date Field
+    orderDate: {
+      type: Date,
+      default: Date.now,
+    },
     shippingAddress: String,
     paymentMethod: String,
 
@@ -56,11 +56,6 @@ const orderSchema = new mongoose.Schema(
     totalPrice: {
       type: String,
       trim: true,
-    },
-
-    price: {
-      type: Number,
-      default: 0.0,
     },
 
     images: String,
