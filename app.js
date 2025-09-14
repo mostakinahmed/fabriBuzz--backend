@@ -10,10 +10,12 @@ const multer = require("multer");
 //models
 const Product = require("./models/productModel");
 const category = require("./models/categoryModel");
+const order = require("./models/orderModel");
 
 //routes
 const productRoutes = require("./routes/productRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 //database connection
 const db = require("./config/db-connection");
@@ -27,6 +29,7 @@ app.use(express.json());
 //all api routes
 app.use("/api/product", productRoutes);
 app.use("/api/category", categoryRoutes);
+app.use("/api/order", orderRoutes);
 
 //home route
 app.get("/", (req, res) => {
