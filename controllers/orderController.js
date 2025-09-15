@@ -23,17 +23,6 @@ const getAllOrder = async (req, res) => {
 const createOrder = async (req, res) => {
   try {
     const newOrder = new order(req.body); // Data from request
-
-    //id genararte
-    // const lastOrder = await order.findOne().sort({ createdAt: -1 });
-    // let newNumber = 1;
-    // if (lastOrder && lastOrder.OID) {
-    //   newNumber = parseInt(lastOrder.OID.slice(3)) + 1;
-    // }
-    // const newID = "OID" + String(newNumber).padStart(8, "0");
-    // newOrder.OID = newID;
-    // console.log(newOrder);
-
     const savedProduct = await newOrder.save();
 
     res.status(201).json(savedProduct);
@@ -41,30 +30,35 @@ const createOrder = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+// PATCH /api/order/status/:id
+const orderStatusChanged = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
 
-//update stock
-// PATCH /api/product/:id/stock
-// const orderUpdate = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const { stock } = req.body;
+    if (!status) {
+      return res.status(400).json({ message: "Status is required" });
+    }
 
-//     const updated = await product.findOneAndUpdate(
-//       { pID: id },
-//       { stock: stock },
-//       { new: true }
-//     );
+    const updatedOrder = await order.findOneAndUpdate(
+      { OID: id },
+      { orderStatus: status },
+      { new: true }
+    );
 
-//     if (!updated) return res.status(404).json({ message: "Product not found" });
+    if (!updatedOrder) {
+      return res.status(404).json({ message: "Order not found" });
+    }
 
-//     res.status(200).json(updated);
-//   } catch (err) {
-//     res.status(400).json({ message: err.message });
-//   }
-// };
+    res.status(200).json(updatedOrder);
+  } catch (err) {
+    console.error("Error updating order status:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 module.exports = {
   createOrder,
-   getAllOrder,
-  // orderUpdate,
+  getAllOrder,
+  orderStatusChanged,
 };
