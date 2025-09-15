@@ -2,13 +2,29 @@ const order = require("../models/orderModel");
 const multer = require("multer");
 
 //get
+// const getAllOrder = async (req, res) => {
+//   try {
+//     const filter = {};
+
+//     // Check if category param exists
+//     if (req.query.OID) {
+//       filter.OID = req.query.OID; // e.g. "OID000000005"
+//     }
+
+//     const orders = await order.find(filter);
+//     res.json(orders);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 const getAllOrder = async (req, res) => {
   try {
     const filter = {};
 
     // Check if category param exists
-    if (req.query.OID) {
-      filter.OID = req.query.OID; // e.g. "OID000000005"
+    if (req.query.orderStatus) {
+      filter.orderStatus = req.query.orderStatus;
     }
 
     const orders = await order.find(filter);
