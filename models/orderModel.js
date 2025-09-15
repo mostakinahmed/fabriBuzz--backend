@@ -8,6 +8,12 @@ const orderSchema = new mongoose.Schema(
       trim: true,
       maxLength: [15, "Order ID cannot exceed 10 characters"],
     },
+    orderStatus: {
+      type: String,
+      trim: true,
+      default:"Pending"
+    },
+  
     customerName: {
       type: String,
       trim: true,
