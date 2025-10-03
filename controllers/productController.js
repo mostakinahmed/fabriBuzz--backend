@@ -23,15 +23,8 @@ const getAllProducts = async (req, res) => {
 // CREATE new Product
 const createProduct = async (req, res) => {
   try {
-    const {
-      productName,
-      brandName,
-      price,
-      stock,
-      category,
-      image,
-      specifications,
-    } = req.body;
+    const { name, brandName, price, stock, category, images, specifications } =
+      req.body;
 
     console.log(specifications);
 
@@ -55,12 +48,12 @@ const createProduct = async (req, res) => {
     // Create new product
     const newProduct = new Product({
       pID: newID,
-      productName,
+      name,
       brandName,
       price,
       stock,
       category,
-      image,
+      images,
       specifications: filteredSpecs,
     });
 
