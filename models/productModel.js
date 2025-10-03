@@ -2,32 +2,19 @@ const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
   {
-    pID: {
-      type: String,
-      trim: true,
-      default: "None",
-      maxLength: [10, "Product ID cannot exceed 10 characters"],
+    pID: { type: String, required: true, unique: true },
+    productName: { type: String, required: true },
+    brandName: { type: String },
+    price: { type: Number },
+    stock: { type: Number },
+    category: { type: String },
+    image: { type: String },
+    specifications: {
+      type: Map,
+      of: [{ key: String, value: String }],
     },
-    name: {
-      type: String,
-      trim: true,
-      maxLength: [100, "Product name cannot exceed 100 characters"],
-    },
-    description: String,
-    price: {
-      type: Number,
-      default: 0.0,
-    },
-    //stock field
-    stock: {
-      type: Number,
-      default: 0, // start with zero
-      min: [0, "Stock cannot be negative"],
-    },
-    images: String,
-    category: String,
   },
-  { timestamps: true } //enable createdAt / updatedAt for the schema
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Product", productSchema);

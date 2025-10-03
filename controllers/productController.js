@@ -1,4 +1,4 @@
-const product = require("../models/productModel");
+const Product = require("../models/productModel");
 const multer = require("multer");
 
 //get
@@ -11,7 +11,7 @@ const getAllProducts = async (req, res) => {
       filter.category = req.query.category; // e.g. "C005"
     }
 
-    const products = await product.find(filter);
+    const products = await Product.find(filter);
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -20,23 +20,49 @@ const getAllProducts = async (req, res) => {
 
 // Insert into MongoDB
 
-// CREATE new product
+// CREATE new Product
 const createProduct = async (req, res) => {
   try {
-    const newProduct = new product(req.body); // Data from request
-
-    //id genararte
-    const lastProduct = await product.findOne().sort({ createdAt: -1 });
+    const {
+      productName,
+      brandName,
+      price,
+      stock,
+      category,
+      image,
+      specifications,
+    } = req.body;
+    
+    // Generate new pID
+    const lastProduct = await Product.findOne().sort({ createdAt: -1 });
     let newNumber = 1;
     if (lastProduct && lastProduct.pID) {
       newNumber = parseInt(lastProduct.pID.slice(1)) + 1;
     }
     const newID = "P" + String(newNumber).padStart(6, "0");
-    newProduct.pID = newID;
-    console.log(newProduct);
+
+    // Filter specifications
+    const filteredSpecs = {};
+    for (const key in specifications) {
+      const arr = specifications[key];
+      if (Array.isArray(arr) && arr.length > 0) {
+        filteredSpecs[key] = arr;
+      }
+    }
+
+    // Create new product
+    const newProduct = new Product({
+      pID: newID,
+      productName,
+      brandName,
+      price,
+      stock,
+      category,
+      image,
+      specifications: filteredSpecs,
+    });
 
     const savedProduct = await newProduct.save();
-
     res.status(201).json(savedProduct);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -44,13 +70,13 @@ const createProduct = async (req, res) => {
 };
 
 //update stock
-// PATCH /api/product/:id/stock
+// PATCH /api/Product/:id/stock
 const stockUpdate = async (req, res) => {
   try {
     const { id } = req.params;
     const { stock } = req.body;
 
-    const updated = await product.findOneAndUpdate(
+    const updated = await Product.findOneAndUpdate(
       { pID: id },
       { stock: stock },
       { new: true }
@@ -68,7 +94,7 @@ const stockUpdate = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedProduct = await product.findByIdAndDelete(id);
+    const deletedProduct = await Product.findByIdAndDelete(id);
 
     if (!deletedProduct)
       return res.status(404).json({ message: "Product not found" });
@@ -79,14 +105,14 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-//update product
-// api/product/update/:id
+//update Product
+// api/Product/update/:id
 const productUpdate = async (req, res) => {
   try {
     const { id } = req.params;
     const data = req.body;
 
-    const updated = await product.findOneAndUpdate({ _id: id }, data, {
+    const updated = await Product.findOneAndUpdate({ _id: id }, data, {
       new: true,
     });
 
