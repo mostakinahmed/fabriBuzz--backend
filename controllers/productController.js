@@ -32,7 +32,9 @@ const createProduct = async (req, res) => {
       image,
       specifications,
     } = req.body;
-    
+
+    console.log(specifications);
+
     // Generate new pID
     const lastProduct = await Product.findOne().sort({ createdAt: -1 });
     let newNumber = 1;
