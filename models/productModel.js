@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema(
     images: { type: String },
     specifications: {
       type: Map,
-      of: [{ key: String, value: String }],
+      of: [{ key: String, value: String, _id: false }], // prevent _id in subdocs
     },
   },
   { timestamps: true }
