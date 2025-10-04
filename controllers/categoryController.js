@@ -30,11 +30,46 @@ const getAllCategories = async (req, res) => {
 // CREATE new category
 const createCategory = async (req, res) => {
   try {
-    const newCategory = new category(req.body); // Data from request
+    // Validate required fields
+    const { catID, catName, specifications } = req.body;
+
+    if (!catID || !catName) {
+      return res.status(400).json({
+        success: false,
+        message: "catID and catName are required.",
+      });
+    }
+
+    // Check for duplicate category ID
+    const existingCategory = await category.findOne({ catID });
+    if (existingCategory) {
+      return res.status(409).json({
+        success: false,
+        message: `Category with ID '${catID}' already exists.`,
+      });
+    }
+
+    // Create and save new category
+    const newCategory = new category({
+      catID,
+      catName,
+      specifications: specifications || [],
+    });
+
     const savedCategory = await newCategory.save();
-    res.status(201).json(savedCategory);
+
+    res.status(201).json({
+      success: true,
+      message: "Category created successfully.",
+      data: savedCategory,
+    });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("Error creating category:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while creating category.",
+      error: error.message,
+    });
   }
 };
 
