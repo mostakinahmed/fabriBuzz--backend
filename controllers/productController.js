@@ -23,10 +23,16 @@ const getAllProducts = async (req, res) => {
 // CREATE new Product
 const createProduct = async (req, res) => {
   try {
-    const { name, brandName, price, stock, category, images, specifications } =
-      req.body;
-
-    console.log(specifications);
+    const {
+      name,
+      brandName,
+      price,
+      stock,
+      category,
+      images,
+      description,
+      specifications,
+    } = req.body;
 
     // Generate new pID
     const lastProduct = await Product.findOne().sort({ createdAt: -1 });
@@ -54,6 +60,7 @@ const createProduct = async (req, res) => {
       stock,
       category,
       images,
+      description,
       specifications: filteredSpecs,
     });
 

@@ -9,6 +9,7 @@ const productSchema = new mongoose.Schema(
     stock: { type: Number },
     category: { type: String },
     images: { type: String },
+    description: { type: String },
     specifications: {
       type: Map,
       of: [{ key: String, value: String, _id: false }], // prevent _id in subdocs
