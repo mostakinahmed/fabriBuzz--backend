@@ -28,13 +28,13 @@ app.use(express.json());
 app.use(cookieParser());
 
 //cokie
-// const allowedOrigins = [
-//   "https://react-auth-jwt.vercel.app",
-//   "https://leafxbd.vercel.app",
-//   "https://admin-leapx.vercel.app",
-// ];
+const allowedOrigins = [
+  "https://react-auth-jwt.vercel.app",
+  "https://leafxbd.vercel.app",
+  "https://admin-leapx.vercel.app",
+];
 
-const allowedOrigins = ["https://leafxbd.vercel.app"];
+// const allowedOrigins = ["https://leafxbd.vercel.app"];
 
 app.use(
   cors({
