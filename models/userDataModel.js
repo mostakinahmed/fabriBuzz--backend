@@ -9,7 +9,7 @@ const userDataSchema = new mongoose.Schema(
     password: { type: String, required: true },
     phone: { type: String },
     email: { type: String, required: true, unique: true },
-    images: { type: String },
+    images: { type: String, default: " " },
   },
   { timestamps: true }
 );
