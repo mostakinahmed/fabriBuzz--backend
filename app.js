@@ -26,24 +26,25 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 
 //cokie
-const allowedOrigins = [
-  "https://react-auth-jwt.vercel.app",
-  "https://leafxbd.vercel.app",
-  "https://admin-leapx.vercel.app",
-];
+// const allowedOrigins = [
+//   "https://react-auth-jwt.vercel.app",
+//   "https://leafxbd.vercel.app",
+//   "https://admin-leapx.vercel.app",
+// ];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow Postman / curl
-      if (allowedOrigins.includes(origin)) callback(null, true);
-      else callback(new Error("Not allowed by CORS"), false);
-    },
-    credentials: true, // must be true for cookies
-  })
-);
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin) return callback(null, true); // allow Postman / curl
+//       if (allowedOrigins.includes(origin)) callback(null, true);
+//       else callback(new Error("Not allowed by CORS"), false);
+//     },
+//     credentials: true, // must be true for cookies
+//   })
+// );
 
 // API routes (after CORS)
 app.use("/api/product", productRoutes);
