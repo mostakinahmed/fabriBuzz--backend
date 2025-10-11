@@ -28,7 +28,7 @@ const db = require("./config/db-connection");
 //middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
@@ -41,7 +41,7 @@ app.use("/api/user", userDataRoutes);
 //allow cookie
 app.use(
   cors({
-    origin: "https://react-auth-jwt.vercel.app/", // your React app URL
+    origin: "https://react-auth-jwt.vercel.app",
     credentials: true, // allow cookies
   })
 );
