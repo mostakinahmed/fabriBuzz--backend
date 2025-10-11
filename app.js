@@ -39,10 +39,27 @@ app.use("/api/order", orderRoutes);
 app.use("/api/user", userDataRoutes);
 
 //allow cookie
+//const cors = require("cors");
+
+const allowedOrigins = [
+  "https://leafxbd.vercel.app", // local frontend (public site)
+  "https://react-auth-jwt.vercel.app", // deployed public site
+  "https://admin-leapx.vercel.app/login", // deployed admin panel
+];
+
 app.use(
   cors({
-    origin: "https://react-auth-jwt.vercel.app",
-    credentials: true, // allow cookies
+    origin: function (origin, callback) {
+      // allow requests with no origin (e.g., Postman or curl)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true); // ✅ origin allowed
+      } else {
+        callback(new Error("Not allowed by CORS"), false); // ❌ origin blocked
+      }
+    },
+    credentials: true, // ✅ allow cookies
   })
 );
 
