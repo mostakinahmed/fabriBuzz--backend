@@ -1,4 +1,6 @@
+require("dotenv").config();
 const UserData = require("../models/userDataModel");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
@@ -48,9 +50,21 @@ const createUser = async (req, res) => {
     const userToSend = savedUser.toObject();
     delete userToSend.password;
 
+    //create token
+    const token = jwt.sign(
+      {
+        email,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "2h" }
+    );
+
+    console.log(token);
+
     res.status(201).json({
       message: "User created successfully",
       user: userToSend,
+      token,
     });
   } catch (error) {
     console.error(" Error creating user:", error);
