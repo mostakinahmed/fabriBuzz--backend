@@ -69,7 +69,7 @@ const createUser = async (req, res) => {
     res.status(201).json({
       message: "User created successfully",
       user: userToSend,
-      token,
+      tokenLast,
     });
   } catch (error) {
     console.error("Error creating user:", error);
