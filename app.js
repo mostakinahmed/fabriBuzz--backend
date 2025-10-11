@@ -32,19 +32,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-//all api routes
-app.use("/api/product", productRoutes);
-app.use("/api/category", categoryRoutes);
-app.use("/api/order", orderRoutes);
-app.use("/api/user", userDataRoutes);
-
 //allow cookie
 //const cors = require("cors");
 
 const allowedOrigins = [
   "https://leafxbd.vercel.app", // local frontend (public site)
   "https://react-auth-jwt.vercel.app", // deployed public site
-  "https://admin-leapx.vercel.app/login", // deployed admin panel
+  "https://admin-leapx.vercel.app", // deployed admin panel
 ];
 
 app.use(
@@ -62,6 +56,12 @@ app.use(
     credentials: true, // ✅ allow cookies
   })
 );
+
+//all api routes
+app.use("/api/product", productRoutes);
+app.use("/api/category", categoryRoutes);
+app.use("/api/order", orderRoutes);
+app.use("/api/user", userDataRoutes);
 
 //home route
 app.get("/", (req, res) => {
