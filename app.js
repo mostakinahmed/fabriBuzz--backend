@@ -38,6 +38,14 @@ app.use("/api/category", categoryRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/user", userDataRoutes);
 
+//allow cookie
+app.use(
+  cors({
+    origin: "https://react-auth-jwt.vercel.app/", // your React app URL
+    credentials: true, // allow cookies
+  })
+);
+
 //home route
 app.get("/", (req, res) => {
   res.send("Welcome to Fabribuzz App Backend.....");
