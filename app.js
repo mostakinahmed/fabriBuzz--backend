@@ -27,25 +27,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ CORS middleware must run BEFORE routes
+//cokie
 const allowedOrigins = [
-  "http://localhost:5173", // local dev frontend
-  "https://leafxbd.vercel.app", // deployed public site
-  "https://react-auth-jwt.vercel.app", // another deployed frontend
-  "https://admin-leapx.vercel.app", // deployed admin panel
+  "https://react-auth-jwt.vercel.app",
+  "https://leafxbd.vercel.app",
+  "https://admin-leapx.vercel.app",
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow Postman/curl
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"), false);
-      }
+      if (!origin) return callback(null, true); // allow Postman / curl
+      if (allowedOrigins.includes(origin)) callback(null, true);
+      else callback(new Error("Not allowed by CORS"), false);
     },
-    credentials: true, // allow cookies
+    credentials: true, // 🔥 required
   })
 );
 

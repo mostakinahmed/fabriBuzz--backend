@@ -14,24 +14,21 @@ const getAllUser = async (req, res) => {
   }
 };
 
-// Create new user
+
 const createUser = async (req, res) => {
   try {
-    const { fullName, admin, userName, password, phone, email, images } =
-      req.body;
+    const { fullName, admin, userName, password, phone, email, images } = req.body;
 
     // Generate new uID
     const lastUser = await UserData.findOne().sort({ createdAt: -1 });
     let newNumber = 1;
-    if (lastUser && lastUser.uID) {
-      newNumber = parseInt(lastUser.uID.slice(1)) + 1;
-    }
+    if (lastUser && lastUser.uID) newNumber = parseInt(lastUser.uID.slice(1)) + 1;
     const newID = "U" + String(newNumber).padStart(5, "0");
 
-    // 🔒 Hash the password (important!)
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Create new user with hashed password
+    // Create new user
     const newUser = new UserData({
       uID: newID,
       fullName,
@@ -43,39 +40,35 @@ const createUser = async (req, res) => {
       images,
     });
 
-    // Save user
     const savedUser = await newUser.save();
 
     // Hide password before sending to frontend
     const userToSend = savedUser.toObject();
     delete userToSend.password;
 
-    //create token
+    // Create JWT token
     const token = jwt.sign(
-      {
-        email,
-      },
+      { email: savedUser.email, id: savedUser._id },
       process.env.JWT_SECRET,
       { expiresIn: "2h" }
     );
 
-  
-
-    // send cookie
+    // Send cookie
+    const isProduction = process.env.NODE_ENV === "production";
     res.cookie("token", token, {
-      httpOnly: true, // prevent access from JavaScript
-      secure: true, // true if HTTPS
-      sameSite: "None", // allow frontend on different domain
-      maxAge: 2 * 60 * 60 * 1000, // 2 hours
+      httpOnly: true,
+      secure: isProduction,            // ✅ true for HTTPS, false for local dev
+      sameSite: isProduction ? "None" : "Lax", // ✅ cross-origin for prod, Lax for dev
+      maxAge: 2 * 60 * 60 * 1000,
     });
 
-    //send data frontend
+    // Send response
     res.status(201).json({
       message: "User created successfully",
       user: userToSend,
     });
   } catch (error) {
-    console.error(" Error creating user:", error);
+    console.error("Error creating user:", error);
     res.status(400).json({ message: error.message });
   }
 };
