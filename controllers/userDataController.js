@@ -1,17 +1,12 @@
 const UserData = require("../models/userDataModel");
-const multer = require("multer");
-
-// for or encripted data
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const myPlaintextPassword = "12345";
-const someOtherPlaintextPassword = "not_bacon";
 
-//get All user
+// Get all users
 const getAllUser = async (req, res) => {
   try {
-    const user = await UserData.find();
-    res.json(user);
+    const users = await UserData.find();
+    res.json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -31,30 +26,34 @@ const createUser = async (req, res) => {
     }
     const newID = "U" + String(newNumber).padStart(5, "0");
 
-    // Create new user
+    // 🔒 Hash the password (important!)
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Create new user with hashed password
     const newUser = new UserData({
       uID: newID,
       fullName,
       admin,
       userName,
-      password,
+      password: hashedPassword,
       phone,
       email,
       images,
     });
 
-    //encript data
-    bcrypt.genSalt(saltRounds, function (err, salt) {
-      bcrypt.hash(myPlaintextPassword, salt, function (err, hash) {
-        // Store hash in your password DB.
-        // update new user
-        newUser.password = hash;
-      });
-    });
-
+    // Save user
     const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
+
+    // Hide password before sending to frontend
+    const userToSend = savedUser.toObject();
+    delete userToSend.password;
+
+    res.status(201).json({
+      message: "User created successfully",
+      user: userToSend,
+    });
   } catch (error) {
+    console.error(" Error creating user:", error);
     res.status(400).json({ message: error.message });
   }
 };
