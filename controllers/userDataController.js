@@ -14,15 +14,16 @@ const getAllUser = async (req, res) => {
   }
 };
 
-
 const createUser = async (req, res) => {
   try {
-    const { fullName, admin, userName, password, phone, email, images } = req.body;
+    const { fullName, admin, userName, password, phone, email, images } =
+      req.body;
 
     // Generate new uID
     const lastUser = await UserData.findOne().sort({ createdAt: -1 });
     let newNumber = 1;
-    if (lastUser && lastUser.uID) newNumber = parseInt(lastUser.uID.slice(1)) + 1;
+    if (lastUser && lastUser.uID)
+      newNumber = parseInt(lastUser.uID.slice(1)) + 1;
     const newID = "U" + String(newNumber).padStart(5, "0");
 
     // Hash password
@@ -57,8 +58,9 @@ const createUser = async (req, res) => {
     const isProduction = process.env.NODE_ENV === "production";
     res.cookie("token", token, {
       httpOnly: true,
-      secure: isProduction,            // ✅ true for HTTPS, false for local dev
+      secure: isProduction, // ✅ true for HTTPS, false for local dev
       sameSite: isProduction ? "None" : "Lax", // ✅ cross-origin for prod, Lax for dev
+      path: "/",
       maxAge: 2 * 60 * 60 * 1000,
     });
 
