@@ -57,18 +57,19 @@ const createUser = async (req, res) => {
     // Send cookie
     const isProduction = process.env.NODE_ENV === "production";
 
-    res.cookie("token111", tokenLast, {
-      httpOnly: true, // cannot be accessed by JS
-      secure: isProduction, // true on HTTPS (Vercel), false on local dev
-      sameSite: isProduction ? "None" : "Lax", // None for cross-origin in production
-      path: "/",
-      maxAge: 2 * 60 * 60 * 1000, // 2 hours
-    });
+    // res.cookie("token111", tokenLast, {
+    //   httpOnly: true, // cannot be accessed by JS
+    //   secure: isProduction, // true on HTTPS (Vercel), false on local dev
+    //   sameSite: isProduction ? "None" : "Lax", // None for cross-origin in production
+    //   path: "/",
+    //   maxAge: 2 * 60 * 60 * 1000, // 2 hours
+    // });
 
     // Send response
     res.status(201).json({
       message: "User created successfully",
       user: userToSend,
+      token,
     });
   } catch (error) {
     console.error("Error creating user:", error);
