@@ -58,10 +58,10 @@ const createUser = async (req, res) => {
     const isProduction = process.env.NODE_ENV === "production";
 
     res.cookie("token111", token, {
-      httpOnly: true, // JS cannot access
-      secure: true, // must be HTTPS
-      sameSite: "None", // cross-origin allowed
-      path: "/", // available for all routes
+      httpOnly: true, // cannot be accessed by JS
+      secure: isProduction, // true on HTTPS (Vercel), false on local dev
+      sameSite: isProduction ? "None" : "Lax", // None for cross-origin in production
+      path: "/",
       maxAge: 2 * 60 * 60 * 1000, // 2 hours
     });
 
