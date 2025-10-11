@@ -57,13 +57,12 @@ const createUser = async (req, res) => {
     // Send cookie
     const isProduction = process.env.NODE_ENV === "production";
     res.cookie("token", token, {
-      // httpOnly: true,
-      // secure: isProduction, // ✅ true for HTTPS, false for local dev
-      // sameSite: isProduction ? "None" : "Lax", // ✅ cross-origin for prod, Lax for dev
-      path: "/",
-      maxAge: 2 * 60 * 60 * 1000,
+      httpOnly: true, // prevents JS from accessing the cookie
+      secure: isProduction, // must be true on HTTPS
+      sameSite: isProduction ? "None" : "Lax", // cross-origin allowed in production
+      path: "/", // cookie available on all routes
+      maxAge: 2 * 60 * 60 * 1000, // 2 hours
     });
-
     // Send response
     res.status(201).json({
       message: "User created successfully",

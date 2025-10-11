@@ -34,8 +34,6 @@ const allowedOrigins = [
   "https://admin-leapx.vercel.app",
 ];
 
-// const allowedOrigins = ["https://leafxbd.vercel.app"];
-
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -43,7 +41,7 @@ app.use(
       if (allowedOrigins.includes(origin)) callback(null, true);
       else callback(new Error("Not allowed by CORS"), false);
     },
-    credentials: true, // 🔥 required
+    credentials: true, // must be true for cookies
   })
 );
 
