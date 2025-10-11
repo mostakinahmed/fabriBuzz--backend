@@ -48,7 +48,7 @@ const createUser = async (req, res) => {
     delete userToSend.password;
 
     // Create JWT token
-    const token = jwt.sign(
+    const tokenLast = jwt.sign(
       { email: savedUser.email, id: savedUser._id },
       process.env.JWT_SECRET,
       { expiresIn: "2h" }
@@ -57,7 +57,7 @@ const createUser = async (req, res) => {
     // Send cookie
     const isProduction = process.env.NODE_ENV === "production";
 
-    res.cookie("token111", token, {
+    res.cookie("token111", tokenLast, {
       httpOnly: true, // cannot be accessed by JS
       secure: isProduction, // true on HTTPS (Vercel), false on local dev
       sameSite: isProduction ? "None" : "Lax", // None for cross-origin in production
