@@ -1,6 +1,12 @@
 const UserData = require("../models/userDataModel");
 const multer = require("multer");
 
+// for or encripted data
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
+const myPlaintextPassword = "12345";
+const someOtherPlaintextPassword = "not_bacon";
+
 //get All user
 const getAllUser = async (req, res) => {
   try {
@@ -35,6 +41,15 @@ const createUser = async (req, res) => {
       phone,
       email,
       images,
+    });
+
+    //encript data
+    bcrypt.genSalt(saltRounds, function (err, salt) {
+      bcrypt.hash(myPlaintextPassword, salt, function (err, hash) {
+        // Store hash in your password DB.
+        // update new user
+        newUser.password = hash;
+      });
     });
 
     const savedUser = await newUser.save();
