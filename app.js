@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const app = express();
 const multer = require("multer");
+const cookieParser = require("cookie-parser");
 
 //dotenv.config();
 
@@ -29,6 +30,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 //all api routes
 app.use("/api/product", productRoutes);

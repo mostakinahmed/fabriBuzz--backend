@@ -59,12 +59,20 @@ const createUser = async (req, res) => {
       { expiresIn: "2h" }
     );
 
-    console.log(token);
+  
 
+    // send cookie
+    res.cookie("token", token, {
+      httpOnly: true, // prevent access from JavaScript
+      secure: true, // true if HTTPS
+      sameSite: "None", // allow frontend on different domain
+      maxAge: 2 * 60 * 60 * 1000, // 2 hours
+    });
+
+    //send data frontend
     res.status(201).json({
       message: "User created successfully",
       user: userToSend,
-      token,
     });
   } catch (error) {
     console.error(" Error creating user:", error);
