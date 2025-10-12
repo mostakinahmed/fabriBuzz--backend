@@ -14,7 +14,7 @@ const getAllUser = async (req, res) => {
   }
 };
 
-const createUser = async (req, res) => {
+const signUp = async (req, res) => {
   try {
     const { fullName, admin, userName, password, phone, email, images } =
       req.body;
@@ -55,7 +55,7 @@ const createUser = async (req, res) => {
     );
 
     // Send cookie
-    const isProduction = process.env.NODE_ENV === "production";
+    // const isProduction = process.env.NODE_ENV === "production";
 
     // res.cookie("token111", tokenLast, {
     //   httpOnly: true, // cannot be accessed by JS
@@ -77,7 +77,46 @@ const createUser = async (req, res) => {
   }
 };
 
+// Sign In controller
+const signIn = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Check if email exists
+    const user = await UserData.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Match password
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatch) {
+      return res.status(401).json({ message: "Incorrect password" });
+    }
+
+    //Create JWT token
+    const token = jwt.sign(
+      { email: user.email, id: user.uID },
+      process.env.JWT_SECRET,
+      { expiresIn: "2h" }
+    );
+
+    // Send successful response
+    res.status(200).json({
+      message: "User logged in successfully",
+      user,
+      token,
+    });
+  } catch (error) {
+    console.error("Login error:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+module.exports = { signIn };
+
 module.exports = {
   getAllUser,
-  createUser,
+  signUp,
+  signIn,
 };
