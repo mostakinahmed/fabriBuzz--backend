@@ -113,8 +113,6 @@ const signIn = async (req, res) => {
   }
 };
 
-module.exports = { signIn };
-
 module.exports = {
   getAllUser,
   signUp,
