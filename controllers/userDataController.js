@@ -113,7 +113,7 @@ const signIn = async (req, res) => {
   }
 };
 
-const checkAuth = (req, res) => {
+const checkAuth = async (req, res) => {
   const token = req.body.token;
 
   if (!token) {
@@ -123,7 +123,13 @@ const checkAuth = (req, res) => {
   //if token available
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    res.json({ loggedIn: true, user: decoded });
+    //fetch user data
+    // Fetch user data from DB
+    const userInfo = await UserData.findOne({
+      uID: decoded.id, // or uID: decoded.id if you used uID
+    }).select("-password"); // hide password
+
+    res.json({ loggedIn: true, user: userInfo });
   } catch (err) {
     res
       .status(403)
