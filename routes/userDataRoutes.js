@@ -10,7 +10,7 @@ const upload = multer();
 const router = express.Router();
 
 router.get("/", getAllUser);
-router.post("/signup", upload.none(), signUp);
-router.post("/signin", upload.none(), signIn);
+router.post("/signup", signUp);
+router.post("/signin", signIn);
 
 module.exports = router;
