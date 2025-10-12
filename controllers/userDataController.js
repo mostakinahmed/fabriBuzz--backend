@@ -113,8 +113,26 @@ const signIn = async (req, res) => {
   }
 };
 
+const checkAuth = (req, res) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ loggedIn: false });
+  }
+
+  //if token available
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    res.json({ loggedIn: true, user: decoded });
+  } catch (err) {
+    res
+      .status(403)
+      .json({ loggedIn: false, message: "Invalid or expired token" });
+  }
+};
+
 module.exports = {
   getAllUser,
   signUp,
   signIn,
+  checkAuth,
 };
