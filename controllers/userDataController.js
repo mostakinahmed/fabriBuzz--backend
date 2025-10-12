@@ -49,7 +49,7 @@ const signUp = async (req, res) => {
 
     // Create JWT token
     const tokenLast = jwt.sign(
-      { email: savedUser.email, id: savedUser._id },
+      { email: savedUser.email, id: savedUser.uID },
       process.env.JWT_SECRET,
       { expiresIn: "2h" }
     );
