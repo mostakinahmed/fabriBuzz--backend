@@ -140,6 +140,16 @@ const adminSignUp = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+// Get all Admins
+const adminList = async (req, res) => {
+  try {
+    const users = await AdminData.find();
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Sign In controller
 const signIn = async (req, res) => {
   const { email, password } = req.body;
@@ -206,4 +216,5 @@ module.exports = {
   signIn,
   checkAuth,
   adminSignUp,
+  adminList,
 };
