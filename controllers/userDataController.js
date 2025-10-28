@@ -87,8 +87,8 @@ const adminSignUp = async (req, res) => {
     // Generate new aID
     const lastUser = await AdminData.findOne().sort({ createdAt: -1 });
     let newNumber = 1;
-    if (lastUser && lastUser.uID)
-      newNumber = parseInt(lastUser.uID.slice(1)) + 1;
+    if (lastUser && lastUser.adminID)
+      newNumber = parseInt(lastUser.adminID.slice(1)) + 1;
     const newID = "A" + String(newNumber).padStart(5, "0");
 
     // Hash password
