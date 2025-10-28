@@ -4,6 +4,7 @@ const {
   checkAuth,
   signIn,
   getAllUser,
+  adminSignUp,
 } = require("../controllers/userDataController");
 
 const multer = require("multer");
@@ -14,5 +15,8 @@ router.get("/", getAllUser);
 router.post("/signup", signUp);
 router.post("/signin", signIn);
 router.post("/check-auth", checkAuth);
+
+// Admin routes can be added here in the future
+router.post("/admin/signup", adminSignUp);
 
 module.exports = router;
