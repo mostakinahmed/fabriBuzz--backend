@@ -11,6 +11,7 @@ const adminDataSchema = new mongoose.Schema(
     phone: { type: String },
     email: { type: String, required: true, unique: true },
     images: { type: String, required: true },
+    lastLogin: { type: Date, default: null },
   },
   { timestamps: true }
 );

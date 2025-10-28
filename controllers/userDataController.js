@@ -105,6 +105,7 @@ const adminSignUp = async (req, res) => {
       phone,
       email,
       images,
+      lastLogin: null,
     });
 
     const savedUser = await newUser.save();
