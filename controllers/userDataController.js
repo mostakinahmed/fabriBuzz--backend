@@ -208,6 +208,13 @@ const adminSignIn = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    //Account Active or Suspended check
+    if (!user.status) {
+      return res
+        .status(403)
+        .json({ message: `Account is suspended. Please contact Admin.` });
+    }
+
     // Match password
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
