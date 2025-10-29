@@ -198,7 +198,6 @@ const adminUpdate = async (req, res) => {
 };
 
 //Admin SignIn
-// Sign In controller
 const adminSignIn = async (req, res) => {
   const { email, password } = req.body;
 
