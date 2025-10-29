@@ -217,7 +217,7 @@ const adminSignIn = async (req, res) => {
 
     //Create JWT token
     const token = jwt.sign(
-      { email: user.email, id: user.uID },
+      { email: user.email, id: user.adminID },
       process.env.JWT_SECRET,
       { expiresIn: "2h" }
     );
