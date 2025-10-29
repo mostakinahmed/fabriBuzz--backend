@@ -197,6 +197,68 @@ const adminUpdate = async (req, res) => {
   }
 };
 
+//Admin SignIn
+// Sign In controller
+const adminSignIn = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Check if email exists
+    const user = await AdminData.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Match password
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatch) {
+      return res.status(401).json({ message: "Incorrect password" });
+    }
+
+    //Create JWT token
+    const token = jwt.sign(
+      { email: user.email, id: user.uID },
+      process.env.JWT_SECRET,
+      { expiresIn: "2h" }
+    );
+
+    // Send successful response
+    res.status(200).json({
+      message: "User logged in successfully",
+      user,
+      token,
+    });
+  } catch (error) {
+    console.error("Login error:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+//Admin Check Auth
+const adminCheckAuth = async (req, res) => {
+  const token = req.body.token;
+
+  if (!token) {
+    return res.status(401).json({ loggedIn: false });
+  }
+
+  //if token available
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    //fetch user data
+    // Fetch user data from DB
+    const userInfo = await AdminData.findOne({
+      adminID: decoded.id, // or uID: decoded.id if you used uID
+    }).select("-password"); // hide password
+
+    res.json({ loggedIn: true, user: userInfo });
+  } catch (err) {
+    res
+      .status(403)
+      .json({ loggedIn: false, message: "Invalid or expired token" });
+  }
+};
+
 // Get all Admins
 const adminList = async (req, res) => {
   try {
@@ -273,6 +335,8 @@ module.exports = {
   signIn,
   checkAuth,
   adminSignUp,
+  adminSignIn,
+  adminCheckAuth,
   adminList,
   adminUpdate,
 };
