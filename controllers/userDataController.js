@@ -228,6 +228,9 @@ const adminSignIn = async (req, res) => {
       { expiresIn: "2h" }
     );
 
+    //saved login time
+    await AdminData.findByIdAndUpdate(user._id, { lastLogin: new Date() });
+
     // Send successful response
     res.status(200).json({
       message: "User logged in successfully",
