@@ -141,6 +141,62 @@ const adminSignUp = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+//Admin Update
+const adminUpdate = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let { fullName, role, status, userName, password, phone, email, images } =
+      req.body;
+
+    // Check if password exists and is not already hashed
+    if (password) {
+      const isHashed =
+        password.startsWith("$2a$") ||
+        password.startsWith("$2b$") ||
+        password.startsWith("$2y$");
+
+      if (!isHashed) {
+        password = await bcrypt.hash(password, saltRounds);
+      }
+    }
+
+    // Prepare update object
+    const updateFields = {
+      fullName,
+      role,
+      status,
+      userName,
+      phone,
+      email,
+      images,
+    };
+
+    if (password) {
+      updateFields.password = password;
+    }
+
+    // Update the admin
+    const updatedAdmin = await AdminData.findByIdAndUpdate(id, updateFields, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedAdmin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    //  Send success response
+    res.status(200).json({
+      message: "Admin updated successfully",
+      admin: updatedAdmin,
+    });
+  } catch (error) {
+    console.error("Error updating admin:", error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
 // Get all Admins
 const adminList = async (req, res) => {
   try {
@@ -218,4 +274,5 @@ module.exports = {
   checkAuth,
   adminSignUp,
   adminList,
+  adminUpdate,
 };
