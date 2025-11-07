@@ -17,6 +17,7 @@ const productRoutes = require("./routes/productRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const userDataRoutes = require("./routes/userDataRoutes");
+const stockRoutes = require("./routes/stockRoutes");
 
 // Database connection
 const db = require("./config/db-connection");
@@ -51,6 +52,7 @@ app.use("/api/product", productRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/user", userDataRoutes);
+app.use("/api/stock", stockRoutes);
 
 // Home route
 app.get("/", (req, res) => {
