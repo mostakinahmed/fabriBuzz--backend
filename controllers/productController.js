@@ -1,3 +1,4 @@
+const { sign } = require("jsonwebtoken");
 const Product = require("../models/productModel");
 const multer = require("multer");
 
@@ -41,6 +42,7 @@ const createProduct = async (req, res) => {
       newNumber = parseInt(lastProduct.pID.slice(1)) + 1;
     }
     const newID = "P" + String(newNumber).padStart(6, "0");
+    const sID = "S" + String(newNumber).padStart(6, "0");
 
     // Filter specifications
     const filteredSpecs = {};
@@ -57,7 +59,7 @@ const createProduct = async (req, res) => {
       name,
       brandName,
       price,
-      stock,
+      stock: sID,
       category,
       images,
       description,
@@ -65,7 +67,11 @@ const createProduct = async (req, res) => {
     });
 
     const savedProduct = await newProduct.save();
-    res.status(201).json(savedProduct);
+    res.status(201).json({
+      pID: newID,
+      sID: sID,
+      message: "Product created successfully",
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
