@@ -1,73 +1,43 @@
 const mongoose = require("mongoose");
 
-const orderSchema = new mongoose.Schema(
-  {
-    // order info
-    OID: {
-      type: String,
-      trim: true,
-      maxLength: [15, "Order ID cannot exceed 10 characters"],
-    },
-    orderStatus: {
-      type: String,
-      trim: true,
-      default:"Pending"
-    },
-  
-    customerName: {
-      type: String,
-      trim: true,
-    },
+// Schema for individual items (disable _id)
+const OrderItemSchema = new mongoose.Schema({
+  product_id: { type: String, required: true },
+  product_name: { type: String, required: true },
+  quantity: { type: Number, required: true },
+  product_price: { type: Number, required: true },
+  product_comments: { type: String, default: "" },
+}, { _id: false }); // <-- disables _id for items
 
-    customerEmail: {
-      type: String,
-      trim: true,
-    },
+// Schema for payment details (disable _id)
+const PaymentSchema = new mongoose.Schema({
+  method: { type: String, required: true },
+  status: { type: String, required: true },
+}, { _id: false });
 
-    customerPhone: {
-      type: String,
-      trim: true,
-    },
-    //Order Date Field
-    orderDate: {
-      type: Date,
-      default: Date.now,
-    },
-    shippingAddress: String,
-    paymentMethod: String,
+// Schema for shipping address (disable _id)
+const ShippingAddressSchema = new mongoose.Schema({
+  recipient_name: { type: String, required: true },
+  phone: { type: String, required: true },
+  address_line1: { type: String, required: true },
+}, { _id: false });
 
-    //product info
-    pID: {
-      type: String,
-      trim: true,
-    },
-    productObjectID: {
-      type: String,
-      trim: true,
-    },
-    productName: {
-      type: String,
-      trim: true,
-    },
-    productPrice: {
-      type: String,
-      trim: true,
-    },
+// Main order schema
+const OrderSchema = new mongoose.Schema({
+  order_id: { type: String, required: true, unique: true },
+  order_date: { type: String, required: true },
+  mode: { type: String, required: true },
+  customer_id: { type: String, default: "" },
+  items: { type: [OrderItemSchema], required: true },
+  discount: { type: Number, default: 0 },
+  subtotal: { type: Number, required: true },
+  shipping_cost: { type: Number, required: true },
+  total_amount: { type: Number, required: true },
+  payment: { type: PaymentSchema, required: true },
+  shipping_address: { type: ShippingAddressSchema, required: true },
+  status: { type: String, required: true, default: "Pending" },
+});
 
-    productQuantity: {
-      type: String,
-      trim: true,
-    },
-
-    totalPrice: {
-      type: String,
-      trim: true,
-    },
-
-    images: String,
-    category: String,
-  },
-  { timestamps: true } //enable createdAt / updatedAt for the schema
-);
-
-module.exports = mongoose.model("Order", orderSchema);
+// Export model
+const Order = mongoose.model("Order", OrderSchema);
+module.exports = Order;

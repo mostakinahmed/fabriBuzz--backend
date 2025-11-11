@@ -10,7 +10,7 @@ const upload = multer(); // initialize multer
 const router = express.Router();
 
 router.get("/", getAllOrder);
-router.post("/", upload.none(), createOrder);
+router.post("/create-order", upload.none(), createOrder);
 router.patch("/status/:id", orderStatusChanged);
 
 module.exports = router;
