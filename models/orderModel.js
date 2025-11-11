@@ -28,6 +28,7 @@ const ShippingAddressSchema = new mongoose.Schema(
     recipient_name: { type: String, required: true },
     phone: { type: String, required: true },
     address_line1: { type: String, required: true },
+    email: { type: String, default: "Null" },
   },
   { _id: false }
 );
