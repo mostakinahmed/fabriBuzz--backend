@@ -1,23 +1,6 @@
 const order = require("../models/orderModel");
 const multer = require("multer");
 
-//get
-// const getAllOrder = async (req, res) => {
-//   try {
-//     const filter = {};
-
-//     // Check if category param exists
-//     if (req.query.OID) {
-//       filter.OID = req.query.OID; // e.g. "OID000000005"
-//     }
-
-//     const orders = await order.find(filter);
-//     res.json(orders);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
 const getAllOrder = async (req, res) => {
   try {
     const filter = {};
@@ -73,8 +56,52 @@ const orderStatusChanged = async (req, res) => {
   }
 };
 
+// PATCH /orders/:orderId
+const orderUpdate = async (req, res) => {
+  try {
+    const { oID } = req.params;
+    const updates = req.body; // frontend sends only changed fields
+
+    // Fetch the order
+    const orderData = await order.findOne({ order_id: oID });
+    if (!orderData) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Update payment status if provided
+    if (updates.payment && updates.payment.status) {
+      orderData.payment.status = updates.payment.status;
+    }
+
+    // Update order status if provided
+    if (updates.status) {
+      orderData.status = updates.status;
+    }
+
+    // Update item SKU(s) if provided
+    if (updates.items && Array.isArray(updates.items)) {
+      updates.items.forEach((itemUpdate) => {
+        const item = orderData.items.find(
+          (i) => i.product_id === itemUpdate.product_id
+        );
+        if (item && itemUpdate.skuID !== undefined) {
+          item.skuID = itemUpdate.skuID;
+        }
+      });
+    }
+
+    await orderData.save();
+
+    res.status(200).json({ message: "Order updated", orderData });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   createOrder,
   getAllOrder,
   orderStatusChanged,
+  orderUpdate,
 };

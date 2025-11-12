@@ -3,6 +3,7 @@ const {
   createOrder,
   getAllOrder,
   orderStatusChanged,
+  orderUpdate,
 } = require("../controllers/orderController");
 
 const multer = require("multer");
@@ -11,6 +12,7 @@ const router = express.Router();
 
 router.get("/", getAllOrder);
 router.post("/create-order", upload.none(), createOrder);
+router.patch("/update/:oID", orderUpdate);
 router.patch("/status/:id", orderStatusChanged);
 
 module.exports = router;
