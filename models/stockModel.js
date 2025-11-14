@@ -15,5 +15,5 @@ const stockSchema = new mongoose.Schema({
   pID: { type: String, required: true, trim: true, unique: true }, // one stock per product
   SKU: { type: [skuSchema], default: [] }, // multiple SKUs per stock
 });
-
+//always convert time utc to local
 module.exports = mongoose.model("stock", stockSchema);
