@@ -7,8 +7,7 @@ const skuSchema = new mongoose.Schema(
     comment: { type: String },
     status: { type: Boolean, default: true },
   },
-  { timestamps: true, versionKey: false },
-  { _id: false }
+  { _id: false, timestamps: true, versionKey: false }
 );
 
 const stockSchema = new mongoose.Schema({
