@@ -5,11 +5,21 @@ const productSchema = new mongoose.Schema(
     pID: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     brandName: { type: String },
-    price: { type: Number },
+    price: {
+      cost: { type: Number, default: 0 },
+      selling: { type: Number, default: 0 },
+      discount: { type: Number, default: 0 },
+    },
     stock: { type: String },
     category: { type: String },
-    images: { type: String },
+    images: [{ type: String }],
     description: { type: String },
+    status: {
+      isFeatured: { type: Boolean, default: false },
+      isFlashSale: { type: Boolean, default: false },
+      isBestSelling: { type: Boolean, default: false },
+      isNewArrival: { type: Boolean, default: false },
+    },
     specifications: {
       type: Map,
       of: [{ key: String, value: String, _id: false }], // prevent _id in subdocs
