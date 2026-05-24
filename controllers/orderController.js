@@ -83,7 +83,7 @@ const sendOrderSms = async (customerPhone, orderId, shortUrl) => {
       cleanNumber = cleanNumber.substring(2);
     if (!cleanNumber.startsWith("0")) cleanNumber = "0" + cleanNumber;
 
-    const message = `Victus Byte: Order #${orderId} is received!\nTrack: ${shortUrl}\nHotline: 09611-342936\nStay with us, Thank you.`;
+    const message = `[Victus Byte]\nOrder #${orderId} is received!\nTrack: ${shortUrl}\nHotline: 09611-342936\nStay with us, Thank you.`;
 
     const response = await axios.get("https://bulksmsbd.net/api/smsapi", {
       params: {
@@ -314,7 +314,7 @@ const editOrder = async (req, res) => {
     // 2. Financial Sync Logic
     // We check if the incoming update contains a new delivery charge
     const incomingCharge = updates["courier.delivery_charge"];
-
+    
     if (incomingCharge !== undefined) {
       const currentCharge = Number(existingOrder.courier?.delivery_charge || 0);
       const newCharge = Number(incomingCharge);
@@ -334,7 +334,7 @@ const editOrder = async (req, res) => {
       {
         new: true,
         runValidators: true,
-      },
+      }
     );
 
     res.status(200).json({
@@ -342,6 +342,7 @@ const editOrder = async (req, res) => {
       message: "Victus Byte: Order & Financials synced",
       data: updatedOrder,
     });
+
   } catch (error) {
     console.error("Victus Byte Financial Sync Error:", error.message);
     res.status(500).json({

@@ -47,7 +47,7 @@ const sendOrderSms = async (customerPhone, otp) => {
       cleanNumber = "0" + cleanNumber;
     }
 
-    const message = `Victus Byte: Your OTP is ${otp}. Please do not share this code.`;
+    const message = `[Victus Byte]\nYour OTP is ${otp}. Please do not share this code.`;
 
     // 2. API Call
     const response = await axios.get("https://bulksmsbd.net/api/smsapi", {
