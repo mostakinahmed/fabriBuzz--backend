@@ -10,10 +10,15 @@ const OrderItemSchema = new mongoose.Schema(
     product_price: { type: Number, required: true },
     imei: { type: String, default: "" },
     discount: { type: Number, default: 0 },
-    product_comments: { type: String, default: "" },
+    // Fixed: Defined as an object matching your frontend payload
+    product_comments: {
+      color: { type: String, default: "" },
+      storage: { type: String, default: "" },
+      phone_price: { type: Number, default: 0 },
+    },
   },
   { _id: false },
-); // <-- disables _id for items
+);
 
 // Schema for shipping address (disable _id)
 const ShippingAddressSchema = new mongoose.Schema(
@@ -36,6 +41,8 @@ const OrderSchema = new mongoose.Schema({
   items: { type: [OrderItemSchema], required: true },
   subtotal: { type: Number, required: true },
   total_amount: { type: Number, required: true },
+
+  // shipping_address (uncomment this if you want it enforced)
   shipping_address: { type: ShippingAddressSchema, required: true },
 
   courier: {
@@ -48,7 +55,7 @@ const OrderSchema = new mongoose.Schema({
       default: "N/A",
     },
     del_type: { type: String, default: "COD" },
-    
+
     total_cod_amount: { type: Number, default: 0, min: 0 },
     delivery_charge: { type: Number, default: 0, min: 0 },
     cod_fee: { type: Number, default: 0, min: 0 },

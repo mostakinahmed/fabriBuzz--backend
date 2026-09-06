@@ -30,6 +30,27 @@ const saveWithRetry = async (orderData) => {
   }
 };
 
+// const verifyOrder = async (items) => {
+//   let orderSummary = { subtotal: 0, totalItemDiscounts: 0 };
+//   if (!items || !Array.isArray(items)) return orderSummary;
+
+//   for (const item of items) {
+//     const pData = await products.findOne({ pID: item.product_id });
+//     if (pData) {
+//       if (pData.category === "mobile-phone") {
+//         const data = item?.specifications.map(spec, () => {spec === "storage"? return data});
+//       } else {
+//         const dbPrice = pData.price.selling || 0;
+//         const dbDiscount = pData.price.discount || 0;
+//         orderSummary.subtotal += dbPrice;
+//         orderSummary.totalItemDiscounts += dbDiscount;
+//       }
+//     }
+//   }
+
+//   return orderSummary;
+// };
+
 const verifyOrder = async (items) => {
   let orderSummary = { subtotal: 0, totalItemDiscounts: 0 };
   if (!items || !Array.isArray(items)) return orderSummary;
@@ -37,12 +58,35 @@ const verifyOrder = async (items) => {
   for (const item of items) {
     const pData = await products.findOne({ pID: item.product_id });
     if (pData) {
-      const dbPrice = pData.price.selling || 0;
-      const dbDiscount = pData.price.discount || 0;
-      orderSummary.subtotal += dbPrice;
-      orderSummary.totalItemDiscounts += dbDiscount;
+      const qty = Number(item.quantity || 1);
+      const isMobile = pData.category?.toLowerCase() === "mobile-phone";
+
+      let dbPrice = 0;
+
+      if (isMobile) {
+        // Check if a specific storage was selected in product_comments
+        const selectedStorage = item?.product_comments?.storage;
+        const matchedStorage = pData?.specifications?.storage?.find(
+          (s) => s.value === selectedStorage || s.key === selectedStorage,
+        );
+
+        // Fallback to item's sent phone_price or base selling price
+        dbPrice = matchedStorage
+          ? Number(matchedStorage.value)
+          : Number(
+              item?.product_comments?.phone_price || pData.price?.selling || 0,
+            );
+      } else {
+        dbPrice = Number(pData.price?.selling || 0);
+      }
+
+      const dbDiscount = Number(pData.price?.discount || 0);
+
+      orderSummary.subtotal += dbPrice * qty;
+      orderSummary.totalItemDiscounts += dbDiscount * qty;
     }
   }
+
   return orderSummary;
 };
 
@@ -140,6 +184,8 @@ const createOrderClient = async (req, res) => {
     }
 
     // Security Calculation: Final = Subtotal - Individual Discounts + Shipping - Coupon
+    // Security Calculation:
+    // Subtotal (Gross) - Total Item Discounts + Shipping - Coupon
     const expectedTotal =
       dbData.subtotal -
       dbData.totalItemDiscounts +
@@ -314,7 +360,7 @@ const editOrder = async (req, res) => {
     // 2. Financial Sync Logic
     // We check if the incoming update contains a new delivery charge
     const incomingCharge = updates["courier.delivery_charge"];
-    
+
     if (incomingCharge !== undefined) {
       const currentCharge = Number(existingOrder.courier?.delivery_charge || 0);
       const newCharge = Number(incomingCharge);
@@ -334,7 +380,7 @@ const editOrder = async (req, res) => {
       {
         new: true,
         runValidators: true,
-      }
+      },
     );
 
     res.status(200).json({
@@ -342,7 +388,6 @@ const editOrder = async (req, res) => {
       message: "Victus Byte: Order & Financials synced",
       data: updatedOrder,
     });
-
   } catch (error) {
     console.error("Victus Byte Financial Sync Error:", error.message);
     res.status(500).json({
